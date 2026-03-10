@@ -1,0 +1,8 @@
+                    UNIDAD 1 – Principios Básicos de Javascript y Backend
+                    
+Node js nos permite correr código Javascript sin necesidad de abrirlo en el navegador. Este:
+•	Levanta un entorno completo para probar nuestras funciones
+•	Debe correrse desde un CLI para poder visualizar los avances del código
+Para ejecutar un archivo .js dentro de VSCode utilizaremos el comando
+node index.js
+
