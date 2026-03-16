@@ -1,0 +1,19 @@
+header {
+    height: 15vh;
+    display: flex;
+    justify-content: center;
+    background-color: teal;
+    color: snow;
+}
+
+main {
+    min-height: 75vh;
+}
+
+footer {
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    background-color: black;
+    color: snow;
+}

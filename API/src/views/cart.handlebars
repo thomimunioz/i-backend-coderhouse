@@ -1,0 +1,104 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/products">Mi Ecommerce</a>
+        <div class="d-flex align-items-center">
+            <span class="navbar-text me-3 text-white">
+                Usuario: <strong>{{user.email}}</strong> 
+            </span>
+            <a href="/products" class="btn btn-outline-light btn-sm me-3">
+                Volver a la tienda
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mb-5">
+    <h2 class="mb-4 text-dark fw-bold">Tu Carrito de Compras</h2>
+
+    {{#if cart.products.length}}
+        <div class="card shadow-sm border">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0 text-center align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-start ps-4">Producto</th>
+                            <th>Precio Unitario</th>
+                            <th>Cantidad</th>
+                            <th>Acciones</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                            {{#each cart.products}}
+                            <tr>
+                                <td>{{this.product.title}}</td>
+                                <td>$ {{this.product.price}}</td>
+                                <td>
+                                    <span class="badge bg-primary rounded-pill">{{this.quantity}}</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" onclick="removeProduct('{{../cart._id}}', '{{this.product._id}}')">
+                                        🗑️
+                                    </button>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-end mt-3 gap-2">
+            <button class="btn btn-outline-danger" onclick="emptyCart('{{cart._id}}')">
+                Vaciar Carrito
+            </button>
+            
+            <button class="btn btn-success">
+                Finalizar Compra
+            </button>
+        </div>
+    {{else}}
+        <div class="alert alert-info text-center py-5 shadow-sm border-0">
+            <h4 class="alert-heading mb-3">Tu carrito está vacío 🛒</h4>
+            <p class="text-muted">Aún no agregaste ningún producto.</p>
+            <a href="/products" class="btn btn-primary mt-3 fw-semibold shadow-sm">
+                Ir a ver productos
+            </a>
+        </div>
+    {{/if}}
+</div>
+
+<script>
+    const removeProduct = async (cid, pid) => {
+        try {
+            const response = await fetch(`/api/carts/${cid}/products/${pid}`, {
+                method: 'DELETE'
+            })
+
+            if(response.ok){
+                location.reload()
+            } else {
+                alert("Error al eliminar el producto");
+            }
+        } catch(error) {
+            console.error(error)
+        }
+    }
+
+    const emptyCart = async (cid) => {
+        if(confirm("¿Estás seguro de que queres vaciar el carrito?")) {
+            try {
+                const response = await fetch(`/api/carts/${cid}`, {
+                    method: 'DELETE'
+                })
+
+                if(response.ok){
+                    location.reload()
+                } else {
+                    alert("Error al vaciar el producto");
+                }
+            } catch (error) {
+                console.error(error)
+            }
+        }
+    }
+</script>

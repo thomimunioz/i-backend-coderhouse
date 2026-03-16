@@ -1,0 +1,123 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/products">Mi Ecommerce</a>
+        <div class="d-flex align-items-center">
+            <span class="navbar-text me-3 text-white">
+                Hola, <strong>{{user.email}}</strong> 
+                <span class="badge bg-warning text-dark ms-1">{{user.role}}</span>
+            </span>
+            <form action="/api/sessions/logout" method="POST" class="m-0">
+                <button class="btn btn-danger btn-sm">Salir</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark fw-bold text-center py-3">
+                    ✏️ Editar Producto
+                </div>
+                <div class="card-body p-4">
+                    
+                    <form id="editProductForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Título</label>
+                            <input type="text" class="form-control" id="title" value="{{product.title}}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Descripción</label>
+                            <textarea class="form-control" id="description" rows="2" required>{{product.description}}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Precio ($)</label>
+                                <input type="number" class="form-control" id="price" value="{{product.price}}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Stock</label>
+                                <input type="number" class="form-control" id="stock" value="{{product.stock}}" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Código</label>
+                                <input type="text" class="form-control" id="code" value="{{product.code}}" required>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-semibold">Categoría</label>
+                                <input type="text" class="form-control" id="category" value="{{product.category}}" required>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 mb-3">
+                            <a href="/products" class="btn btn-outline-secondary w-50 fw-semibold">Cancelar</a>
+                            <button type="button" class="btn btn-warning w-50 fw-semibold" onclick="updateProduct('{{product._id}}')">
+                                Guardar Cambios
+                            </button>
+                        </div>
+                        
+                        <button type="button" class="btn btn-danger w-100 fw-bold shadow-sm" onclick="deleteThisProduct('{{product._id}}')">
+                            🗑️ Eliminar Producto Definitivamente
+                        </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const updateProduct = async (pid) => {
+        const updatedData = {
+            title: document.getElementById('title').value,
+            description: document.getElementById('description').value,
+            price: Number(document.getElementById('price').value),
+            stock: Number(document.getElementById('stock').value),
+            code: document.getElementById('code').value,
+            category: document.getElementById('category').value
+        };
+
+        try {
+            const response = await fetch(`/api/products/${pid}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedData)
+            });
+
+            if(response.ok) {
+                alert("¡Producto actualizado con éxito!");
+                window.location.href = '/products';
+            } else {
+                alert("Error al actualizar el producto.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    const deleteThisProduct = async (pid) => {
+    if(confirm("⚠️ ¿Estás seguro? Esta acción no se puede deshacer.")){
+        try {
+            const response = await fetch(`/api/products/${pid}`, { method: 'DELETE' });
+            if(response.ok) {
+                alert("Producto eliminado.");
+                window.location.href = '/products';
+            } else {
+                alert("Hubo un error al eliminar.");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
+</script>

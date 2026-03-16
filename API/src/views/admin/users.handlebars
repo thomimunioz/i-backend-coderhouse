@@ -1,0 +1,50 @@
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>👥 Panel de Control de Usuarios</h2>
+        <a href="/products" class="btn btn-outline-primary">Volver a la Tienda</a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <table class="table align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Email</th>
+                        <th>Rol Actual</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each users}}
+                    <tr>
+                        <td class="fw-semibold">{{this.email}}</td>
+                        <td>
+                            <span class="badge bg-secondary">
+                                {{this.role}}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-info me-2" onclick="toggleRole('{{this._id}}')">🔄 Cambiar Rol</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteUser('{{this._id}}')">🗑️</button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const toggleRole = async (uid) => {
+        const res = await fetch(`/api/users/${uid}/role`, { method: 'PUT' });
+        if(res.ok) location.reload();
+    }
+
+    const deleteUser = async (uid) => {
+        if(confirm("¿Seguro que querés eliminar a este usuario del sistema?")){
+            const res = await fetch(`/api/users/${uid}`, { method: 'DELETE' });
+            if(res.ok) location.reload();
+        }
+    }
+</script>
